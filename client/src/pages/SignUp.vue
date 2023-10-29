@@ -1,9 +1,6 @@
 <script setup></script>
-
 <template>
-	<suspense>
-		<router-view />
-	</suspense>
+	<div>SignUp</div>
 </template>
 
 <style scoped></style>

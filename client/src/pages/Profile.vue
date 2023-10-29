@@ -1,9 +1,6 @@
 <script setup></script>
-
 <template>
-	<suspense>
-		<router-view />
-	</suspense>
+	<div>Profiles</div>
 </template>
 
 <style scoped></style>
