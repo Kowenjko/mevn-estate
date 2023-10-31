@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import Headers from './components/Headers.vue'
+</script>
 
 <template>
 	<suspense>
