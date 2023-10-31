@@ -12,55 +12,31 @@ export const router = createRouter({
 	routes: [
 		{
 			path: '/',
-			name: 'home',
 			component: DefaultLayout,
 			children: [
 				{
 					path: '',
+					name: 'home',
 					component: Home,
 				},
-			],
-		},
-		{
-			path: '/about',
-			name: 'about',
-			component: DefaultLayout,
-			children: [
 				{
-					path: '',
+					path: 'about',
+					name: 'about',
 					component: About,
 				},
-			],
-		},
-		{
-			path: '/sign-in',
-			name: 'sign-in',
-			component: DefaultLayout,
-			children: [
 				{
-					path: '',
+					path: 'sign-in',
+					name: 'sign-in',
 					component: SignIn,
 				},
-			],
-		},
-		{
-			path: '/sign-out',
-			name: 'sign-out',
-			component: DefaultLayout,
-			children: [
 				{
-					path: '',
+					path: 'sign-up',
+					name: 'sign-up',
 					component: SignUp,
 				},
-			],
-		},
-		{
-			path: '/profile',
-			name: 'profile',
-			component: DefaultLayout,
-			children: [
 				{
-					path: '',
+					path: 'profile',
+					name: 'profile',
 					component: Profile,
 				},
 			],

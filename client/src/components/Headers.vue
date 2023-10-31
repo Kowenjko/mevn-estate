@@ -36,7 +36,6 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 </template>
 
 <style scoped>
-.router-link-active,
 .router-link-exact-active {
 	@apply text-slate-950;
 }
