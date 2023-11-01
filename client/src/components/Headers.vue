@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 </script>
 <template>
 	<header class="bg-slate-200 shadow-md">
-		<div class="flex justify-between items-center max-w-6xl mx-auto p-3">
+		<div class="flex justify-between items-center max-w-6xl mx-auto sm:p-3">
 			<router-link to="/">
 				<h1 class="font-bold text-sm sm:text-xl flex flex-wrap">
 					<span class="text-slate-500">Sahand</span>
@@ -11,12 +11,12 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 				</h1>
 			</router-link>
 			<form
-				class="bg-slate-100 p-3 rounded-lg flex items-center gap-2 w-24 sm:w-64"
+				class="bg-slate-100 p-3 rounded-lg flex items-center justify-between gap-2 w-24 sm:w-64"
 			>
 				<input
 					type="text"
 					placeholder="Search..."
-					class="bg-transparent focus:outline-none"
+					class="bg-transparent focus:outline-none w-full"
 				/>
 				<MagnifyingGlassIcon class="w-4 text-slate-500" />
 			</form>

@@ -1,6 +1,6 @@
 <script setup></script>
 <template>
-	<div>Profiles</div>
+	<main>Profiles</main>
 </template>
 
 <style scoped></style>

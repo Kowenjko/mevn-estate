@@ -1,6 +1,6 @@
 <script setup></script>
 <template>
-	<div>SignIn</div>
+	<main>SignIn</main>
 </template>
 
 <style scoped></style>
