@@ -1,21 +1,20 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore.js'
 
 const formData = reactive({})
-const error = ref(null)
-const loading = ref(false)
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const handleChange = (event) => {
 	Object.assign(formData, { [event.target.id]: event.target.value })
 }
 
 const handleSubmit = async () => {
-	error.value = null
 	try {
-		loading.value = true
+		userStore.signInStart()
 		const res = await fetch('/api/auth/signin', {
 			method: 'POST',
 			headers: {
@@ -26,12 +25,12 @@ const handleSubmit = async () => {
 
 		const data = await res.json()
 
-		if (data?.success === false) return (error.value = data.message)
+		if (data?.success === false) return userStore.signInFailure(data.message)
+
+		userStore.signInSuccess(data)
 		router.push('/')
 	} catch (error) {
-		error.value = error
-	} finally {
-		loading.value = false
+		userStore.signInFailure(error.message)
 	}
 }
 </script>
@@ -55,9 +54,9 @@ const handleSubmit = async () => {
 			/>
 			<button
 				class="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80 transition-all"
-				:disabled="loading"
+				:disabled="userStore.loading"
 			>
-				{{ loading ? 'Loading...' : 'Sign In' }}
+				{{ userStore.loading ? 'Loading...' : 'Sign In' }}
 			</button>
 		</form>
 		<div class="flex gap-2 mt-5">
@@ -66,7 +65,9 @@ const handleSubmit = async () => {
 				<span class="text-blue-700">Sign Up</span>
 			</router-link>
 		</div>
-		<p v-if="error" class="text-red-500 mt-5">{{ error }}</p>
+		<p v-if="userStore.error" class="text-red-500 mt-5">
+			{{ userStore.error }}
+		</p>
 	</main>
 </template>
 
