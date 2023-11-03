@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore.js'
+import OAuth from '@/components/OAuth.vue'
 
 const formData = reactive({})
 
@@ -58,6 +59,7 @@ const handleSubmit = async () => {
 			>
 				{{ userStore.loading ? 'Loading...' : 'Sign In' }}
 			</button>
+			<o-auth />
 		</form>
 		<div class="flex gap-2 mt-5">
 			<p>Do not have an account?</p>

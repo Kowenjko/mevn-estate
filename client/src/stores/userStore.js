@@ -1,20 +1,25 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { useStorage } from '@vueuse/core'
+import { ref, watch } from 'vue'
 
 export const useUserStore = defineStore('userStore', () => {
 	const currentUser = ref(null)
 	const error = ref(null)
 	const loading = ref(null)
-	const userStorage = useStorage('userStore', null)
+
+	const getCurrentUser = () => currentUser.value
+	const setCurrentUser = (user) => (currentUser.value = user)
+
+	const userCurrentInLocalStorage = localStorage.getItem('currentUser')
+
+	if (userCurrentInLocalStorage)
+		setCurrentUser(JSON.parse(userCurrentInLocalStorage))
 
 	const signInStart = () => (loading.value = true)
 
 	const signInSuccess = (user) => {
 		loading.value = false
 		error.value = null
-		currentUser.value = user
-		userStorage.value = user
+		setCurrentUser(user)
 	}
 
 	const signInFailure = (err) => {
@@ -22,5 +27,22 @@ export const useUserStore = defineStore('userStore', () => {
 		error.value = err
 	}
 
-	return { signInStart, signInSuccess, signInFailure, loading, error, loading }
+	watch(
+		() => currentUser,
+		(state) => {
+			localStorage.setItem('currentUser', JSON.stringify(state.value))
+		},
+		{ deep: true }
+	)
+
+	return {
+		signInStart,
+		signInSuccess,
+		signInFailure,
+		loading,
+		error,
+		loading,
+		getCurrentUser,
+		setCurrentUser,
+	}
 })
