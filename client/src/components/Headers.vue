@@ -1,5 +1,8 @@
 <script setup>
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
+import { useUserStore } from '@/stores/userStore.js'
+
+const userStore = useUserStore()
 </script>
 <template>
 	<header class="bg-slate-200 shadow-md">
@@ -28,7 +31,15 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 					<router-link to="/about">About</router-link>
 				</li>
 				<li class="text-slate-500 hover:underline">
-					<router-link to="/sign-in">Sign In</router-link>
+					<router-link to="/sign-in">
+						<img
+							class="rounded-full h-7 w-7 object-cover"
+							v-if="userStore.getCurrentUser()"
+							:src="userStore.getCurrentUser().avatar"
+							alt="avatar"
+						/>
+						<span v-else>Sign In</span>
+					</router-link>
 				</li>
 			</ul>
 		</div>

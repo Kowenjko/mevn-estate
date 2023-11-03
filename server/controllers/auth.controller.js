@@ -4,6 +4,7 @@ import { errorHandler } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
 
 export const signup = async (req, res, next) => {
+	console.log('signUp =>', req.body)
 	const { username, email, password } = req.body
 
 	const hashPassword = bcryptjs.hashSync(password, 10)
@@ -17,6 +18,7 @@ export const signup = async (req, res, next) => {
 	}
 }
 export const signin = async (req, res, next) => {
+	console.log('signIn =>', req.body)
 	const { email, password } = req.body
 
 	try {
@@ -42,7 +44,7 @@ export const signin = async (req, res, next) => {
 }
 
 export const google = async (req, res, next) => {
-	console.log(req.body)
+	console.log('google =>', req.body)
 
 	try {
 		const user = await User.findOne({ email: req.body.email })

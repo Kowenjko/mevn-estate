@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useFetch } from '@/composables/UseFetch.js'
 
 const formData = reactive({})
 const error = ref(null)
@@ -16,15 +17,7 @@ const handleSubmit = async () => {
 	error.value = null
 	try {
 		loading.value = true
-		const res = await fetch('/api/auth/signup', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formData),
-		})
-
-		const data = await res.json()
+		const data = await useFetch('api/auth/signup', formData)
 
 		if (data?.success === false) return (error.value = data.message)
 		router.push('/sign-in')

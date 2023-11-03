@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore.js'
+import { useFetch } from '@/composables/UseFetch.js'
 import OAuth from '@/components/OAuth.vue'
 
 const formData = reactive({})
@@ -16,17 +17,11 @@ const handleChange = (event) => {
 const handleSubmit = async () => {
 	try {
 		userStore.signInStart()
-		const res = await fetch('/api/auth/signin', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formData),
-		})
+		const data = await useFetch('api/auth/signin', formData)
 
-		const data = await res.json()
-
-		if (data?.success === false) return userStore.signInFailure(data.message)
+		if (data?.success === false) {
+			return userStore.signInFailure(data.message)
+		}
 
 		userStore.signInSuccess(data)
 		router.push('/')

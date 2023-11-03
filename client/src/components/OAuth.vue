@@ -3,6 +3,7 @@ import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 import { app } from '../firebase.js'
 import { useUserStore } from '@/stores/userStore.js'
 import { useRouter } from 'vue-router'
+import { useFetch } from '@/composables/UseFetch.js'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -13,17 +14,14 @@ const handleGoogleClick = async () => {
 		const auth = getAuth(app)
 
 		const result = await signInWithPopup(auth, provider)
-		const { displayName, email, photoUrl } = result.user
+		const { displayName, email, photoURL } = result.user
 
-		const res = await fetch('api/auth/google', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ name: displayName, email, photo: photoUrl }),
+		const data = await useFetch('api/auth/google', {
+			name: displayName,
+			email,
+			photo: photoURL,
 		})
 
-		const data = await res.json()
 		userStore.setCurrentUser(data)
 		router.push('/')
 	} catch (error) {

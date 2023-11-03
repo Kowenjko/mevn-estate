@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { useUserStore } from '@/stores/userStore.js'
+
 import Home from '@/pages/Home.vue'
 import About from '@/pages/About.vue'
 import SignIn from '@/pages/SignIn.vue'
@@ -38,6 +40,10 @@ export const router = createRouter({
 					path: 'profile',
 					name: 'profile',
 					component: Profile,
+					beforeEnter: () => {
+						const userStore = useUserStore()
+						return userStore.getCurrentUser() ? true : '/sign-in'
+					},
 				},
 			],
 		},
