@@ -31,7 +31,7 @@ const userStore = useUserStore()
 					<router-link to="/about">About</router-link>
 				</li>
 				<li class="text-slate-500 hover:underline">
-					<router-link to="/sign-in">
+					<router-link to="/profile">
 						<img
 							class="rounded-full h-7 w-7 object-cover"
 							v-if="userStore.getCurrentUser()"
