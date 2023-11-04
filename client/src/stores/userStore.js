@@ -25,6 +25,7 @@ export const useUserStore = defineStore('userStore', () => {
 	const signInFailure = (err) => {
 		loading.value = false
 		error.value = err
+		setCurrentUser(null)
 	}
 
 	watch(

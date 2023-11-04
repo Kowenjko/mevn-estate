@@ -6,7 +6,7 @@ const userStore = useUserStore()
 <template>
 	<main class="p-3 max-w-lg mx-auto">
 		<h1 class="text-center text-3xl font-semibold my-7">Profile</h1>
-		<form class="flex flex-col gap-4">
+		<form class="flex flex-col gap-4" @submit.prevent="">
 			<img
 				class="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
 				:src="userStore.getCurrentUser().avatar"
