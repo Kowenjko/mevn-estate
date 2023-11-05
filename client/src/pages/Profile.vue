@@ -29,7 +29,10 @@ const handleFileUpload = () => {
 			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
 			filePerc.value = Math.round(progress)
 		},
-		(error) => (fileUploadError.value = true),
+		(error) => {
+			console.log('Error uploaded', error)
+			fileUploadError.value = true
+		},
 		async () => {
 			const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
 			formData.value = { ...formData.value, avatar: downloadURL }

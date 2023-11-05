@@ -1,6 +1,6 @@
 <script setup>
-import { signInWithPopup, getAuth } from 'firebase/auth'
-import { app } from '../firebase.js'
+import { signInWithPopup } from 'firebase/auth'
+import { auth } from '@/api/FirebaseSetup.js'
 import { useUserStore } from '@/stores/userStore.js'
 import { useRouter } from 'vue-router'
 import { useFetch } from '@/composables/useFetch.js'
@@ -14,12 +14,11 @@ const { getOAuthProviderIds, getOAuthProvider, getDataProvider } = useOAuth()
 const handleGoogleClick = async (providerId) => {
 	try {
 		const provider = getOAuthProvider(providerId)
-		const auth = getAuth(app)
 
 		const result = await signInWithPopup(auth, provider)
-		const res = getDataProvider(providerId, result)
+		const dataProvider = getDataProvider(providerId, result)
 
-		const data = await useFetch('api/auth/google', res)
+		const data = await useFetch('api/auth/google', dataProvider)
 
 		console.log('data', data)
 		if (data.success === false) return
