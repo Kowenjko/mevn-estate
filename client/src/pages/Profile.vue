@@ -1,22 +1,30 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore.js'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, reactive } from 'vue'
+
 import { uploadFileStorage } from '@/api/repository/StorageRepository.js'
+import { useFetch } from '@/composables/UseFetch.js'
 
 import { getDownloadURL } from 'firebase/storage'
 
-const fileRef = ref(null)
-
 const userStore = useUserStore()
+const { username, email, avatar } = userStore.currentUser
+
+const fileRef = ref(null)
 const file = ref(null)
 const filePerc = ref(0)
 const fileUploadError = ref(false)
-const formData = ref({})
+const updateSuccess = ref(false)
+
+const formData = reactive({ username, email, avatar })
 
 const isUploadFile = computed(() => filePerc.value > 0 && filePerc.value < 100)
 
-const changeFile = (event) => {
-	file.value = event.target.files[0]
+const resetParams = () => {
+	updateSuccess.value = false
+	file.value = null
+	filePerc.value = 0
+	fileUploadError.value = false
 }
 
 const handleFileUpload = () => {
@@ -35,20 +43,41 @@ const handleFileUpload = () => {
 		},
 		async () => {
 			const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
-			formData.value = { ...formData.value, avatar: downloadURL }
+			Object.assign(formData, { avatar: downloadURL })
 		}
 	)
 }
 
-watch(file, (value) => {
-	console.log(value)
-	if (value) handleFileUpload()
-})
+const changeFile = (event) => {
+	resetParams()
+	file.value = event.target.files[0]
+	handleFileUpload()
+	event.target.value = null
+}
+
+const handleSubmit = async () => {
+	try {
+		userStore.signInStart()
+		const data = await useFetch(
+			`api/user/update/${userStore.currentUser._id}`,
+			formData
+		)
+
+		if (data?.success === false) {
+			return userStore.signInFailure(data.message)
+		}
+
+		userStore.signInSuccess(data)
+		updateSuccess.value = true
+	} catch (error) {
+		userStore.signInFailure(error.message)
+	}
+}
 </script>
 <template>
 	<main class="p-3 max-w-lg mx-auto">
 		<h1 class="text-center text-3xl font-semibold my-7">Profile</h1>
-		<form class="flex flex-col gap-4" @submit.prevent="">
+		<form class="flex flex-col gap-4" @submit.prevent="handleSubmit">
 			<input
 				@change="changeFile($event)"
 				hidden
@@ -79,30 +108,39 @@ watch(file, (value) => {
 				placeholder="username"
 				class="border p-3 rounded-lg"
 				id="username"
+				v-model="formData.username"
 			/>
 			<input
 				type="email"
 				placeholder="email"
 				class="border p-3 rounded-lg"
 				id="email"
+				v-model="formData.email"
 			/>
 			<input
 				type="password"
 				placeholder="password"
 				class="border p-3 rounded-lg"
 				id="password"
+				v-model="formData.password"
 			/>
 			<button
 				type="submit"
 				class="bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-80 uppercase"
 			>
-				Update
+				{{ userStore.loading ? 'Loading...' : 'Update' }}
 			</button>
 		</form>
 		<div class="flex justify-between items-center mt-5">
 			<button class="text-red-700">Delete account</button>
 			<button class="text-red-700">Sign out</button>
 		</div>
+		<p v-if="userStore.error" class="text-red-500 mt-5">
+			{{ userStore.error }}
+		</p>
+		<p v-if="updateSuccess" class="text-green-500 mt-5">
+			User is updated successfully!!!
+		</p>
 	</main>
 </template>
 

@@ -14,7 +14,10 @@ export const useUserStore = defineStore('userStore', () => {
 	if (userCurrentInLocalStorage)
 		setCurrentUser(JSON.parse(userCurrentInLocalStorage))
 
-	const signInStart = () => (loading.value = true)
+	const signInStart = () => {
+		loading.value = true
+		error.value = null
+	}
 
 	const signInSuccess = (user) => {
 		loading.value = false
@@ -25,7 +28,7 @@ export const useUserStore = defineStore('userStore', () => {
 	const signInFailure = (err) => {
 		loading.value = false
 		error.value = err
-		setCurrentUser(null)
+		// setCurrentUser(null)
 	}
 
 	watch(
@@ -43,6 +46,7 @@ export const useUserStore = defineStore('userStore', () => {
 		loading,
 		error,
 		loading,
+		currentUser,
 		getCurrentUser,
 		setCurrentUser,
 	}
