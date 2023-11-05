@@ -31,6 +31,12 @@ export const useUserStore = defineStore('userStore', () => {
 		// setCurrentUser(null)
 	}
 
+	const deleteUserSuccess = () => {
+		loading.value = false
+		error.value = null
+		setCurrentUser(null)
+	}
+
 	watch(
 		() => currentUser,
 		(state) => {
@@ -49,5 +55,6 @@ export const useUserStore = defineStore('userStore', () => {
 		currentUser,
 		getCurrentUser,
 		setCurrentUser,
+		deleteUserSuccess,
 	}
 })

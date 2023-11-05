@@ -13,6 +13,7 @@ const { getOAuthProviderIds, getOAuthProvider, getDataProvider } = useOAuth()
 
 const handleGoogleClick = async (providerId) => {
 	try {
+		userStore.error = false
 		const provider = getOAuthProvider(providerId)
 
 		const result = await signInWithPopup(auth, provider)

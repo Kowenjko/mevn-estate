@@ -1,6 +1,7 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore.js'
 import { computed, ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { uploadFileStorage } from '@/api/repository/StorageRepository.js'
 import { useFetch } from '@/composables/UseFetch.js'
@@ -8,6 +9,7 @@ import { useFetch } from '@/composables/UseFetch.js'
 import { getDownloadURL } from 'firebase/storage'
 
 const userStore = useUserStore()
+const router = useRouter()
 const { username, email, avatar } = userStore.currentUser
 
 const fileRef = ref(null)
@@ -73,6 +75,25 @@ const handleSubmit = async () => {
 		userStore.signInFailure(error.message)
 	}
 }
+
+const handleDeleteUser = async () => {
+	try {
+		userStore.signInStart()
+		const data = await useFetch(
+			`api/user/delete/${userStore.currentUser._id}`,
+			{},
+			'DELETE'
+		)
+
+		if (data?.success === false) {
+			return userStore.signInFailure(data.message)
+		}
+		userStore.deleteUserSuccess()
+		router.push('/sign-in')
+	} catch (error) {
+		userStore.signInFailure(error.message)
+	}
+}
 </script>
 <template>
 	<main class="p-3 max-w-lg mx-auto">
@@ -92,13 +113,13 @@ const handleSubmit = async () => {
 				alt="avatar"
 			/>
 			<p class="self-center text-sm">
-				<span v-if="fileUploadError" class="text-red-700"
+				<span v-if="fileUploadError" class="text-red-500"
 					>Error Image upload (image must be less than 2mb)</span
 				>
-				<span v-else-if="isUploadFile" class="text-slate-700"
+				<span v-else-if="isUploadFile" class="text-slate-900"
 					>Uploading {{ filePerc }}%</span
 				>
-				<span v-else-if="filePerc === 100" class="text-green-700">
+				<span v-else-if="filePerc === 100" class="text-green-500">
 					Successfully uploaded!</span
 				>
 			</p>
@@ -132,7 +153,9 @@ const handleSubmit = async () => {
 			</button>
 		</form>
 		<div class="flex justify-between items-center mt-5">
-			<button class="text-red-700">Delete account</button>
+			<button @click="handleDeleteUser" class="text-red-700">
+				Delete account
+			</button>
 			<button class="text-red-700">Sign out</button>
 		</div>
 		<p v-if="userStore.error" class="text-red-500 mt-5">

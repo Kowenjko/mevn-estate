@@ -1,6 +1,6 @@
-export const useFetch = async (url, data) => {
+export const useFetch = async (url, data, method = 'POST') => {
 	const res = await fetch(url, {
-		method: 'POST',
+		method,
 		headers: {
 			'Content-Type': 'application/json',
 		},
