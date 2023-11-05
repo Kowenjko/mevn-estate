@@ -94,6 +94,21 @@ const handleDeleteUser = async () => {
 		userStore.signInFailure(error.message)
 	}
 }
+
+const handleSignOut = async () => {
+	try {
+		userStore.signInStart()
+		const data = await fetch(`api/auth/signout`)
+
+		if (data?.success === false) {
+			return userStore.signInFailure(data.message)
+		}
+		userStore.deleteUserSuccess()
+		router.push('/sign-in')
+	} catch (error) {
+		userStore.signInFailure(error.message)
+	}
+}
 </script>
 <template>
 	<main class="p-3 max-w-lg mx-auto">
@@ -156,7 +171,7 @@ const handleDeleteUser = async () => {
 			<button @click="handleDeleteUser" class="text-red-700">
 				Delete account
 			</button>
-			<button class="text-red-700">Sign out</button>
+			<button @click="handleSignOut" class="text-red-700">Sign out</button>
 		</div>
 		<p v-if="userStore.error" class="text-red-500 mt-5">
 			{{ userStore.error }}
