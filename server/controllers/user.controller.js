@@ -32,7 +32,7 @@ export const updateUser = async (req, res, next) => {
 }
 export const deleteUser = async (req, res, next) => {
 	console.log('deleteUser =>', req.user.id)
-	console.log('deleteUser =>', req.params.id)
+
 	if (req.user.id !== req.params.id)
 		return next(errorHandler(401, 'You can only delete your own account!'))
 

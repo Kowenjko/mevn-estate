@@ -59,26 +59,26 @@ const changeFile = (event) => {
 
 const handleSubmit = async () => {
 	try {
-		userStore.signInStart()
+		userStore.isStart()
 		const data = await useFetch(
 			`api/user/update/${userStore.currentUser._id}`,
 			formData
 		)
 
 		if (data?.success === false) {
-			return userStore.signInFailure(data.message)
+			return userStore.isFailure(data.message)
 		}
 
-		userStore.signInSuccess(data)
+		userStore.isSuccess(data)
 		updateSuccess.value = true
 	} catch (error) {
-		userStore.signInFailure(error.message)
+		userStore.isFailure(error.message)
 	}
 }
 
 const handleDeleteUser = async () => {
 	try {
-		userStore.signInStart()
+		userStore.isStart()
 		const data = await useFetch(
 			`api/user/delete/${userStore.currentUser._id}`,
 			{},
@@ -86,27 +86,27 @@ const handleDeleteUser = async () => {
 		)
 
 		if (data?.success === false) {
-			return userStore.signInFailure(data.message)
+			return userStore.isFailure(data.message)
 		}
-		userStore.deleteUserSuccess()
+		userStore.isDeleteSuccess()
 		router.push('/sign-in')
 	} catch (error) {
-		userStore.signInFailure(error.message)
+		userStore.isFailure(error.message)
 	}
 }
 
 const handleSignOut = async () => {
 	try {
-		userStore.signInStart()
+		userStore.isStart()
 		const data = await fetch(`api/auth/signout`)
 
 		if (data?.success === false) {
-			return userStore.signInFailure(data.message)
+			return userStore.isFailure(data.message)
 		}
-		userStore.deleteUserSuccess()
+		userStore.isDeleteSuccess()
 		router.push('/sign-in')
 	} catch (error) {
-		userStore.signInFailure(error.message)
+		userStore.isFailure(error.message)
 	}
 }
 </script>

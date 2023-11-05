@@ -16,17 +16,17 @@ const handleChange = (event) => {
 
 const handleSubmit = async () => {
 	try {
-		userStore.signInStart()
+		userStore.isStart()
 		const data = await useFetch('api/auth/signin', formData)
 
 		if (data?.success === false) {
-			return userStore.signInFailure(data.message)
+			return userStore.isFailure(data.message)
 		}
 
-		userStore.signInSuccess(data)
+		userStore.isSuccess(data)
 		router.push('/')
 	} catch (error) {
-		userStore.signInFailure(error.message)
+		userStore.isFailure(error.message)
 	}
 }
 </script>

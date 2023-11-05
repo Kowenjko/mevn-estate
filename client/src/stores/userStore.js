@@ -14,24 +14,24 @@ export const useUserStore = defineStore('userStore', () => {
 	if (userCurrentInLocalStorage)
 		setCurrentUser(JSON.parse(userCurrentInLocalStorage))
 
-	const signInStart = () => {
+	const isStart = () => {
 		loading.value = true
 		error.value = null
 	}
 
-	const signInSuccess = (user) => {
+	const isSuccess = (user) => {
 		loading.value = false
 		error.value = null
 		setCurrentUser(user)
 	}
 
-	const signInFailure = (err) => {
+	const isFailure = (err) => {
 		loading.value = false
 		error.value = err
 		// setCurrentUser(null)
 	}
 
-	const deleteUserSuccess = () => {
+	const isDeleteSuccess = () => {
 		loading.value = false
 		error.value = null
 		setCurrentUser(null)
@@ -46,15 +46,15 @@ export const useUserStore = defineStore('userStore', () => {
 	)
 
 	return {
-		signInStart,
-		signInSuccess,
-		signInFailure,
+		isStart,
+		isSuccess,
+		isFailure,
 		loading,
 		error,
 		loading,
 		currentUser,
 		getCurrentUser,
 		setCurrentUser,
-		deleteUserSuccess,
+		isDeleteSuccess,
 	}
 })
