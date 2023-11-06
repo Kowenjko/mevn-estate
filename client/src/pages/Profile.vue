@@ -166,6 +166,12 @@ const handleSignOut = async () => {
 			>
 				{{ userStore.loading ? 'Loading...' : 'Update' }}
 			</button>
+			<router-link
+				class="bg-green-700 text-white p-3 rounded-lg hover:opacity-95 uppercase text-center"
+				to="/create-listing"
+			>
+				Create Listing
+			</router-link>
 		</form>
 		<div class="flex justify-between items-center mt-5">
 			<button @click="handleDeleteUser" class="text-red-700">
