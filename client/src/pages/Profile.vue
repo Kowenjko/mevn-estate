@@ -118,13 +118,27 @@ const handleShowListings = async () => {
 		const res = await fetch(`api/user/listings/${userStore.currentUser._id}`)
 		const data = await res.json()
 
-		console.log(data)
 		userListings.value = data
 		if (data?.success === false) {
 			return userStore.isFailure(data.message)
 		}
 	} catch (error) {
 		showListingsError.value = true
+	}
+}
+
+const handleListingDelete = async (listingId) => {
+	try {
+		const data = await useFetch(`api/listing/delete/${listingId}`, {}, 'DELETE')
+
+		if (data?.success === false) {
+			return userStore.isFailure(data.message)
+		}
+		userListings.value = [...userListings.value].filter(
+			(listing) => listing._id !== listingId
+		)
+	} catch (error) {
+		console.log(error)
 	}
 }
 </script>
@@ -232,7 +246,12 @@ const handleShowListings = async () => {
 					{{ listing.name }}
 				</router-link>
 				<div class="flex flex-col items-center">
-					<button class="uppercase text-red-700">Delete</button>
+					<button
+						@click="handleListingDelete(listing._id)"
+						class="uppercase text-red-700"
+					>
+						Delete
+					</button>
 					<button class="uppercase text-green-700">Edit</button>
 				</div>
 			</div>
