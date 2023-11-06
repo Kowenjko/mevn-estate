@@ -17,6 +17,8 @@ const file = ref(null)
 const filePerc = ref(0)
 const fileUploadError = ref(false)
 const updateSuccess = ref(false)
+const showListingsError = ref(false)
+const userListings = ref([])
 
 const formData = reactive({ username, email, avatar })
 
@@ -109,6 +111,22 @@ const handleSignOut = async () => {
 		userStore.isFailure(error.message)
 	}
 }
+
+const handleShowListings = async () => {
+	showListingsError.value = false
+	try {
+		const res = await fetch(`api/user/listings/${userStore.currentUser._id}`)
+		const data = await res.json()
+
+		console.log(data)
+		userListings.value = data
+		if (data?.success === false) {
+			return userStore.isFailure(data.message)
+		}
+	} catch (error) {
+		showListingsError.value = true
+	}
+}
 </script>
 <template>
 	<main class="p-3 max-w-lg mx-auto">
@@ -185,6 +203,40 @@ const handleSignOut = async () => {
 		<p v-if="updateSuccess" class="text-green-500 mt-5">
 			User is updated successfully!!!
 		</p>
+		<button @click="handleShowListings" class="text-green-700 w-full mt-5">
+			Show listings
+		</button>
+		<p v-if="showListingsError" class="text-red-700 mt-5">
+			Error show listings
+		</p>
+		<template v-if="userListings.length > 0">
+			<h2 class="text-center text-2xl text-slate-900 font-bold my-7">
+				Your Listings
+			</h2>
+			<div
+				v-for="listing in userListings"
+				:key="listing._id"
+				class="flex items-center justify-between gap-4 border border-gray-300 rounded-lg p-2 mt-4"
+			>
+				<router-link :to="`/listing/${listing._id}`">
+					<img
+						:src="listing.imageUrls[0]"
+						:alt="listing.name"
+						class="w-16 h-16 object-contain rounded-lg"
+					/>
+				</router-link>
+				<router-link
+					:to="`/listing/${listing._id}`"
+					class="text-slate-700 hover:underline font-semibold flex-1 truncate"
+				>
+					{{ listing.name }}
+				</router-link>
+				<div class="flex flex-col items-center">
+					<button class="uppercase text-red-700">Delete</button>
+					<button class="uppercase text-green-700">Edit</button>
+				</div>
+			</div>
+		</template>
 	</main>
 </template>
 
