@@ -1,10 +1,75 @@
-<script setup></script>
+<script setup>
+import { ref, reactive } from 'vue'
+import { uploadFileStorage } from '@/api/repository/StorageRepository.js'
+import { getDownloadURL } from 'firebase/storage'
+
+const files = ref([])
+const imageUploadError = ref(null)
+const formData = reactive({ imageUrls: [] })
+const uploading = ref(false)
+
+const handleChangeFiles = (event) => {
+	files.value = event.target.files
+	// event.target.value = null
+}
+
+const storeImage = async (file) => {
+	return new Promise((resolve, reject) => {
+		const fileName = new Date().getTime() + file.name
+
+		const uploadTask = uploadFileStorage(file, fileName)
+
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				console.log(`Upload id ${progress}% done`)
+			},
+
+			(error) => {
+				reject(error)
+			},
+			async () => {
+				const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+				resolve(downloadURL)
+			}
+		)
+	})
+}
+
+const handleImageSubmit = async () => {
+	if (files.value.length + formData.imageUrls.length > 6) {
+		imageUploadError.value = 'You can only upload 6 images per listing'
+		return
+	}
+	uploading.value = true
+	const promises = []
+
+	for (const file of files.value) {
+		promises.push(storeImage(file))
+	}
+
+	try {
+		const urls = await Promise.all(promises)
+		Object.assign(formData, { imageUrls: [...formData.imageUrls, ...urls] })
+		imageUploadError.value = null
+	} catch (error) {
+		imageUploadError.value = 'Image upload failed (2 mb max per image)'
+	} finally {
+		uploading.value = false
+	}
+}
+
+const handleRemoveImage = (index) => {
+	formData.imageUrls = [...formData.imageUrls].filter((_, i) => i !== index)
+}
+</script>
 
 <template>
 	<main class="max-w-4xl mx-auto p-3">
 		<h1 class="text-3xl font-semibold text-center my-7">Create Listing</h1>
 
-		<form class="flex flex-col sm:flex-row gap-4">
+		<form class="flex flex-col sm:flex-row gap-4" @submit.prevent="">
 			<div class="flex flex-col gap-4 w-full flex-1">
 				<input
 					type="text"
@@ -114,6 +179,7 @@
 				</p>
 				<div class="flex items-center gap-4">
 					<input
+						@change="handleChangeFiles"
 						type="file"
 						id="images"
 						accept="image/*"
@@ -121,11 +187,38 @@
 						class="p-3 border border-gray-300 rounded w-full"
 					/>
 					<button
+						@click.prevent="handleImageSubmit"
+						type="button"
+						:disabled="uploading"
 						class="p-3 text-green-700 border rounded uppercase hover:shadow-lg disabled:opacity-80 transition-all border-green-700"
 					>
-						Upload
+						{{ uploading ? 'Uploading...' : 'Upload' }}
 					</button>
 				</div>
+				<p v-if="imageUploadError" class="text-red-700 text-sm">
+					{{ imageUploadError }}
+				</p>
+				<template v-if="formData.imageUrls.length > 0">
+					<div
+						class="flex justify-between items-center p-3 border"
+						v-for="(url, index) in formData.imageUrls"
+						:key="index"
+					>
+						<img
+							class="w-20 h-20 object-contain rounded-lg"
+							:src="url"
+							alt="image"
+						/>
+						<button
+							@click="handleRemoveImage(index)"
+							type="button"
+							class="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+						>
+							Delete
+						</button>
+					</div>
+				</template>
+
 				<button
 					type="submit"
 					class="uppercase p-3 bg-slate-700 rounded-lg text-white hover:opacity-95 disabled:opacity-80"
