@@ -137,6 +137,7 @@ const handleListingDelete = async (listingId) => {
 		userListings.value = [...userListings.value].filter(
 			(listing) => listing._id !== listingId
 		)
+		console.log(data.message)
 	} catch (error) {
 		console.log(error)
 	}
