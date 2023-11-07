@@ -118,10 +118,10 @@ const handleShowListings = async () => {
 		const res = await fetch(`api/user/listings/${userStore.currentUser._id}`)
 		const data = await res.json()
 
-		userListings.value = data
 		if (data?.success === false) {
 			return userStore.isFailure(data.message)
 		}
+		userListings.value = [...data]
 	} catch (error) {
 		showListingsError.value = true
 	}
@@ -253,7 +253,12 @@ const handleListingDelete = async (listingId) => {
 					>
 						Delete
 					</button>
-					<button class="uppercase text-green-700">Edit</button>
+					<button
+						@click="() => router.push(`/update-listing/${listing._id}`)"
+						class="uppercase text-green-700"
+					>
+						Edit
+					</button>
 				</div>
 			</div>
 		</template>

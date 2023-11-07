@@ -8,6 +8,7 @@ import SignIn from '@/pages/SignIn.vue'
 import SignUp from '@/pages/SignUp.vue'
 import Profile from '@/pages/Profile.vue'
 import CreateListing from '@/pages/CreateListing.vue'
+import UpdateListing from '@/pages/UpdateListing.vue'
 import DefaultLayout from '@/layouts/Default.vue'
 
 export const router = createRouter({
@@ -36,6 +37,15 @@ export const router = createRouter({
 					path: 'sign-up',
 					name: 'sign-up',
 					component: SignUp,
+				},
+				{
+					path: 'update-listing/:id',
+					name: 'update-listing',
+					component: UpdateListing,
+					beforeEnter: () => {
+						const userStore = useUserStore()
+						return userStore.getCurrentUser() ? true : '/sign-in'
+					},
 				},
 				{
 					path: 'create-listing',
