@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, Controller } from 'swiper/modules'
 import { MapPinIcon } from '@heroicons/vue/24/solid'
 import { useUserStore } from '@/stores/userStore.js'
+import Contact from '@/components/Contact.vue'
 
 import 'swiper/css/bundle'
 
@@ -54,7 +55,7 @@ const isFurnished = computed(() =>
 const isContact = computed(
 	() =>
 		userStore.currentUser &&
-		listing.value.userRef === userStore.currentUser._id &&
+		listing.value.userRef !== userStore.currentUser._id &&
 		!contact.value
 )
 
@@ -175,6 +176,7 @@ onMounted(async () => {
 				>
 					Contact landlord
 				</button>
+				<contact v-if="contact" :listing="listing" />
 			</div>
 		</template>
 	</main>
