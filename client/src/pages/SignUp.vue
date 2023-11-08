@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useFetch } from '@/composables/UseFetch.js'
+import { useFetch } from '@/composables/useFetch.js'
 
 const formData = reactive({})
 const error = ref(null)

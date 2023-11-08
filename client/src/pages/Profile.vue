@@ -4,7 +4,7 @@ import { computed, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { uploadFileStorage } from '@/api/repository/StorageRepository.js'
-import { useFetch } from '@/composables/UseFetch.js'
+import { useFetch } from '@/composables/useFetch.js'
 
 import { getDownloadURL } from 'firebase/storage'
 

@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { uploadFileStorage } from '@/api/repository/StorageRepository.js'
 import { getDownloadURL } from 'firebase/storage'
-import { useFetch } from '@/composables/UseFetch.js'
+import { useFetch } from '@/composables/useFetch.js'
 import { useUserStore } from '@/stores/userStore.js'
 
 const files = ref([])

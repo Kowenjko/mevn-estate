@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore.js'
-import { useFetch } from '@/composables/UseFetch.js'
+import { useFetch } from '@/composables/useFetch.js'
 import OAuth from '@/components/OAuth.vue'
 
 const formData = reactive({})
