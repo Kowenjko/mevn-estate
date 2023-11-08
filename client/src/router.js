@@ -10,6 +10,7 @@ import Profile from '@/pages/Profile.vue'
 import CreateListing from '@/pages/CreateListing.vue'
 import UpdateListing from '@/pages/UpdateListing.vue'
 import Listing from '@/pages/Listing.vue'
+import Search from '@/pages/Search.vue'
 import DefaultLayout from '@/layouts/Default.vue'
 
 export const router = createRouter({
@@ -44,6 +45,7 @@ export const router = createRouter({
 					name: 'listing',
 					component: Listing,
 				},
+
 				{
 					path: 'update-listing/:id',
 					name: 'update-listing',
@@ -70,6 +72,11 @@ export const router = createRouter({
 						const userStore = useUserStore()
 						return userStore.getCurrentUser() ? true : '/sign-in'
 					},
+				},
+				{
+					path: 'search',
+					name: 'search',
+					component: Search,
 				},
 			],
 		},
