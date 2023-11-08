@@ -37,6 +37,7 @@ const userStore = useUserStore()
 							v-if="userStore.getCurrentUser()"
 							:src="userStore.getCurrentUser().avatar"
 							alt="avatar"
+							referrerpolicy="no-referrer"
 						/>
 						<span v-else>Sign In</span>
 					</router-link>

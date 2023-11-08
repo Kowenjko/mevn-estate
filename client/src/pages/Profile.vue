@@ -159,6 +159,7 @@ const handleListingDelete = async (listingId) => {
 				class="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
 				:src="formData.avatar || userStore.getCurrentUser().avatar"
 				alt="avatar"
+				referrerpolicy="no-referrer"
 			/>
 			<p class="self-center text-sm">
 				<span v-if="fileUploadError" class="text-red-500"

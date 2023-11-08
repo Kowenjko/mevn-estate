@@ -101,10 +101,11 @@ onMounted(async () => {
 				:space-between="500"
 				:pagination="{ clickable: true }"
 				:scrollbar="{ draggable: true }"
+				class="shadow-lg"
 			>
 				<swiper-slide v-for="(url, index) in listing.imageUrls" :key="index">
 					<div
-						class="h-[350px]"
+						class="h-[500px]"
 						:style="{
 							background: `url(${url}) center no-repeat`,
 							backgroundSize: 'cover',
