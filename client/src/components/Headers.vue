@@ -2,7 +2,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { useUserStore } from '@/stores/userStore.js'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router'
 
 const searchTerm = ref('')
 
@@ -11,11 +11,13 @@ const userStore = useUserStore()
 const router = useRouter()
 
 const handleSubmit = () => {
-	const urlParams = new URLSearchParams(window.localStorage.search)
-	urlParams.set('searchTerm', searchTerm.value)
-	window.location.search = urlParams
-	const searchQuery = urlParams.toString()
-	router.push(`/search?${searchQuery}`)
+	router.push({
+		name: 'search',
+		query: {
+			...router.query,
+			searchTerm: searchTerm.value,
+		},
+	})
 }
 </script>
 <template>
@@ -28,8 +30,6 @@ const handleSubmit = () => {
 				</h1>
 			</router-link>
 			<form
-				@submit="handleSubmit"
-				@keydown.enter="handleSubmit"
 				class="bg-slate-100 p-3 rounded-lg flex items-center justify-between gap-2 w-24 sm:w-64"
 			>
 				<input
@@ -37,8 +37,9 @@ const handleSubmit = () => {
 					placeholder="Search..."
 					class="bg-transparent focus:outline-none w-full"
 					v-model="searchTerm"
+					@keydown.enter.prevent="handleSubmit"
 				/>
-				<button type="submit">
+				<button type="button" @click="handleSubmit">
 					<MagnifyingGlassIcon class="w-4 text-slate-500" />
 				</button>
 			</form>

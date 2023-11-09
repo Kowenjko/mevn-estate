@@ -90,8 +90,9 @@ onMounted(fetchOfferListings)
 					<router-link
 						class="text-sm text-blue-800 hover:underline"
 						to="/search?offer=true"
-						>Show more offers</router-link
 					>
+						Show more offers
+					</router-link>
 				</div>
 				<div class="flex flex-wrap gap-4">
 					<ListingItem
@@ -110,8 +111,9 @@ onMounted(fetchOfferListings)
 					<router-link
 						class="text-sm text-blue-800 hover:underline"
 						to="/search?type=rent"
-						>Show more places for rent</router-link
 					>
+						Show more places for rent
+					</router-link>
 				</div>
 				<div class="flex flex-wrap gap-4">
 					<ListingItem
@@ -127,11 +129,12 @@ onMounted(fetchOfferListings)
 					<h2 class="text-2xl font-semibold text-slate-600">
 						Recent places for sale
 					</h2>
-					<Link
+					<router-link
 						class="text-sm text-blue-800 hover:underline"
 						to="/search?type=sale"
-						>Show more places for sale</Link
 					>
+						Show more places for sale
+					</router-link>
 				</div>
 				<div class="flex flex-wrap gap-4">
 					<ListingItem

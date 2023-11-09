@@ -26,6 +26,11 @@ export const router = createRouter({
 					component: Home,
 				},
 				{
+					path: 'search',
+					name: 'search',
+					component: Search,
+				},
+				{
 					path: 'about',
 					name: 'about',
 					component: About,
@@ -72,11 +77,6 @@ export const router = createRouter({
 						const userStore = useUserStore()
 						return userStore.getCurrentUser() ? true : '/sign-in'
 					},
-				},
-				{
-					path: 'search',
-					name: 'search',
-					component: Search,
 				},
 			],
 		},
