@@ -20,39 +20,13 @@ const sidebardata = reactive({
 })
 
 const searchInListing = async () => {
-	const urlParams = new URLSearchParams(location.search)
-	const searchTermFromUrl = urlParams.get('searchTerm')
-	const typeFromUrl = urlParams.get('type')
-	const parkingFromUrl = urlParams.get('parking')
-	const furnishedFromUrl = urlParams.get('furnished')
-	const offerFromUrl = urlParams.get('offer')
-	const sortFromUrl = urlParams.get('sort')
-	const orderFromUrl = urlParams.get('order')
-
-	if (
-		searchTermFromUrl ||
-		typeFromUrl ||
-		parkingFromUrl ||
-		furnishedFromUrl ||
-		offerFromUrl ||
-		sortFromUrl ||
-		orderFromUrl
-	) {
-		const tempSidebardata = {
-			searchTerm: searchTermFromUrl || '',
-			type: typeFromUrl || 'all',
-			parking: parkingFromUrl === 'true' ? true : false,
-			furnished: furnishedFromUrl === 'true' ? true : false,
-			offer: offerFromUrl === 'true' ? true : false,
-			sort: sortFromUrl || 'created_at',
-			order: orderFromUrl || 'desc',
-		}
-		Object.assign(sidebardata, { ...tempSidebardata })
-	}
+	if (route?.query) Object.assign(sidebardata, { ...route.query })
 	loading.value = true
 	showMore.value = false
 
+	const urlParams = new URLSearchParams(sidebardata)
 	const searchQuery = urlParams.toString()
+
 	const res = await fetch(`/api/listing/get?${searchQuery}`)
 	const data = await res.json()
 
@@ -71,7 +45,6 @@ watch(() => route.fullPath, searchInListing, { deep: true })
 const handleChange = (e) => {
 	if (e.target.id === 'sort_order') {
 		const sort = e.target.value.split('_')[0] || 'created_at'
-
 		const order = e.target.value.split('_')[1] || 'desc'
 
 		Object.assign(sidebardata, { sort, order })
@@ -79,30 +52,18 @@ const handleChange = (e) => {
 }
 
 const handleSubmit = () => {
-	console.log(location.search)
-
-	const urlParams = new URLSearchParams()
-	urlParams.set('searchTerm', sidebardata.searchTerm)
-	urlParams.set('type', sidebardata.type)
-	urlParams.set('parking', sidebardata.parking)
-	urlParams.set('furnished', sidebardata.furnished)
-	urlParams.set('offer', sidebardata.offer)
-	urlParams.set('sort', sidebardata.sort)
-	urlParams.set('order', sidebardata.order)
-	const searchQuery = urlParams.toString()
-
-	router.push(`/search?${searchQuery}`)
+	router.push({ name: 'search', query: sidebardata })
 }
 
 const onShowMoreClick = async () => {
 	const numberOfListings = listings.value.length
 	const startIndex = numberOfListings
-	const urlParams = new URLSearchParams(location.search)
+	const urlParams = new URLSearchParams(route.query)
 	urlParams.set('startIndex', startIndex)
 	const searchQuery = urlParams.toString()
 	const res = await fetch(`/api/listing/get?${searchQuery}`)
 	const data = await res.json()
-	console.log(data)
+
 	if (data.length < 9) {
 		showMore.value = false
 	}
